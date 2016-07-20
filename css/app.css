@@ -1,0 +1,64 @@
+@media (min-width: 1200px) {
+  .seven-cols .col-md-1,
+  .seven-cols .col-sm-1,
+  .seven-cols col-lg-1 {
+    width: 14.285714285714285714285714285714% !important;
+    *width: 14.285714285714285714285714285714% !important;
+  }
+}
+
+.tile_stats_count
+{
+    cursor: pointer;
+    position: absolute;
+}
+
+.tile_stats_count .info {
+    opacity: 1;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+}
+
+.tile_stats_count:hover .percentage {
+  opacity: 1;
+}
+
+.tile_stats_count:hover .info
+{
+    opacity: 0.0;
+}
+.tile_stats_count .percentage {
+    position: absolute;
+    backface-visibility: hidden;
+    opacity: 0;
+    -webkit-backface-visibility: hidden;
+    -webkit-transition: all 0.8s ease-in-out;
+    -moz-transition: all 0.8s ease-in-out;
+    transition: all 0.8s ease-in-out;
+}
+
+.tc-chart-js-legend {
+  list-style-type: none;
+  padding-left: 0px;
+}
+.tc-chart-js-legend li {
+  display: block;
+  float: left;
+  clear:both;
+  /*padding:10px;*/
+  font-size: smaller;
+  width: 200px;
+}
+.tc-chart-js-legend li span {
+  width:15px;
+  height:15px;
+  display:block;
+  float:left;
+  margin-right:10px;
+  
+}
+
+.piechart {
+    width: 60%;
+}

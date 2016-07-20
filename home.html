@@ -1,0 +1,566 @@
+<html class="no-js iarouse">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- stylesheets-->
+        <!--<link href="http://fonts.googleapis.com/css?family=Lustria|Lato:300,400,700,400italic" rel="stylesheet" type="text/css">
+        -->
+        <!--<link rel="stylesheet" href="styles/circles.css"/>-->
+        <!--<link rel="stylesheet" href="styles/charts.css"/>-->
+        <!---->
+        
+    </head>
+    <body>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="css/custom.css" rel="stylesheet">
+    
+        <link rel="stylesheet" href="css/app.css"/>
+    
+    <div ng-app="app.dashboard" ng-controller="ProjectsCtrl">
+        <!-- top tiles -->
+        <div class="row tile_count seven-cols">
+            <div class="col-lg-1 col-md-1 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-user"></i> Total</span>
+              <div class="count info blue">{{Total}}</div>
+              <div class="count percentage blue">100%</div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-4 col-xs-6 tile_stats_count tile_stats_countLine">
+              <span class="count_top"><i class="fa fa-spinner fa-spin"></i> Active</span>
+              <div class="count info">{{Active.Total}}</div>
+              <div class="count percentage">{{Active.Percentage}}%</div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-check"></i> Finished</span>
+              <div class="count info">{{Finished.Total}}</div>
+              <div class="count percentage">{{Finished.Percentage}}%</div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-4 col-xs-6 tile_stats_count tile_stats_countLine">
+              <span class="count_top"><i class="fa fa-pencil"></i> Bull Pen</span>
+               <div class="count info">{{BullPen.Total}}</div>
+              <div class="count percentage">{{BullPen.Percentage}}%</div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-line-chart"></i> Feasibility</span>
+               <div class="count info">{{Feasibility.Total}}</div>
+              <div class="count percentage">{{Feasibility.Percentage}}%</div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-table"></i> Charter Definition</span>
+              <div ng-if="typeof(CharterDefinition.Percentage) ==='undefined'" class="count info">{{CharterDefinition.Total}}</div>
+              <div ng-if="typeof(CharterDefinition.Percentage) !=='undefined'" class="count info">0</div>              
+              <div ng-if="typeof(CharterDefinition.Percentage) ==='undefined'" class="count percentage">{{CharterDefinition.Percentage}}%</div>
+              <div ng-if="typeof(CharterDefinition.Percentage) !=='undefined'" class="count percentage">0%</div>              
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-ban"></i> Cancelled</span>
+               <div class="count info">{{Cancelled.Total}}</div>
+              <div class="count percentage">{{Cancelled.Percentage}}%</div>
+            </div>
+          </div>
+          <!-- /top tiles -->
+          
+          <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12 x_panel tile">
+                  <div class="nav_title site_title"><i class="fa fa-spinner"></i> <span>Active Projects</span></div>
+              </div>
+          </div>
+          
+          <div class="row">
+
+            <!-- Active Projects Summary -->
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="x_panel tile">
+                <div class="x_title">
+                  <h2>Summary -  {{ Today }}</h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <div class="widget_summary">
+                    <div class="smart-table">
+                        <table st-table="activeCollection" class="table table-striped" >
+                            <thead>
+                                <tr>    
+                                    <th>
+                                      <div st-sort="id">Id</div>
+                                        <select st-search st-input-event="change">
+                                            <option value="">
+                                                ALL
+                                            </option>
+                                            <option ng-repeat="item in activeCollection" value="{{ item.id }}">
+                                                {{ item.id }}
+                                            </option>
+                                        </select>
+                                    </th>
+                                    <th>
+                                      <div st-sort="project">Project</div>
+                                        <select st-search st-input-event="change" class="form-control input-sm" type="search">
+                                            <option value="">
+                                                ALL
+                                            </option>
+                                            <option ng-repeat="item in activeCollection" value="{{ item.project }}">
+                                                {{ item.project }}
+                                            </option>
+                                        </select>
+                                    </th>
+                                    <th>
+                                      <div st-sort="leader">Leader</div>
+                                        <select st-search st-input-event="change" st-delay=0 ng-model="dummy" class="form-control input-sm" type="search">
+                                            <option value="">
+                                                ALL
+                                            </option>
+                                            <option ng-repeat="item in Leaders" value="{{ item }}">
+                                                {{ item }}
+                                            </option>
+                                        </select>
+                                    </th>
+                                    <th>
+                                      <div st-sort="division">Division</div>
+                                        <select st-search st-input-event="change" st-delay=0 ng-model="dummy" class="form-control input-sm" type="search">
+                                            <option value="">
+                                                ALL
+                                            </option>
+                                            <option ng-repeat="item in Division" value="{{ item }}">
+                                                {{ item }}
+                                            </option>
+                                        </select>
+                                    </th>
+                                    <th>
+                                        <div st-sort="productline">Product Line</div>
+                                        <input st-search="productline" placeholder="product line" class="input-sm form-control" type="search"/>
+                                    </th>
+                                    <th>
+                                        <div st-sort="finishdate">Finish Date</div>
+                                        <input st-search="finishdate" placeholder="finish date" class="input-sm form-control" type="search"/>
+                                    </th>
+                                    <th>Code  
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              <tr ng-repeat="row in activeCollection">
+                                  <td>{{row.id}}</td>
+                                  <td>{{row.project}}</td>
+                                  <td>{{row.leader}}</td>
+                                  <td>{{row.division}}</td>
+                                  <td><div ng-repeat="item in row.productline">
+                                      {{item}}<br>
+                                    </div></td>
+                                  <td>{{row.finishdate}}</td>
+                                  <td style="background-color: {{row.dimensions.finishdate}};border: 1px solid gray;"></td>
+                              </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="clearfix"></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- /Active Projects By Summary -->  
+          </div>
+          
+          <div class="row">
+
+            <!-- Active Projects By Leader -->
+            <div class="col-md-6 col-sm-6 col-xs-6">
+              <div class="x_panel tile">
+                <div class="x_title">
+                  <h2>Active Projects by Leader</h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <div class="widget_summary" ng-repeat="item in ActivebyLeader">
+                    <div class="w_left w_25">
+                      <span>{{item.Leader}}</span>
+                    </div>
+                    <div class="w_center w_55">
+                      <div class="progress">
+                        <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{(100*item.Total/ActivebyLeaderMax)-10| number:0}}%;">
+                          <span class="sr-only">{{(100*item.Total/ActivebyLeaderMax)| number:0}}% Complete</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="w_right w_20">
+                      <span>{{item.Total}}</span>
+                    </div>
+                    <div class="clearfix"></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- /Active Projects By Leader -->
+            
+            <!-- /Active Projects By Area -->
+            <div class="col-md-6 col-sm-6 col-xs-6">
+              <div class="x_panel tile">
+                <div class="x_title">
+                  <h2>Active Projects by Area</h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <div class="widget_summary" ng-repeat="item in ActivebyArea">
+                    <div class="w_left w_25">
+                      <span>{{item.Area}}</span>
+                    </div>
+                    <div class="w_center w_55">
+                      <div class="progress">
+                        <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{(100*item.Total/ActivebyAreaMax)-10| number:0}}%;">
+                          <span class="sr-only">{{(100*item.Total/ActivebyAreaMax)| number:0}}% Complete</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="w_right w_20">
+                      <span>{{item.Total}}</span>
+                    </div>
+                    <div class="clearfix"></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- /Active Projects By Area -->
+          </div>
+          
+          <div class="row">
+
+            <!-- /Active Projects By Division -->
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="x_panel tile">
+                <div class="x_title">
+                  <h2>Active Projects by Division</h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <div class="widget_summary">
+                    <canvas tc-chartjs-bar chart-options="options" chart-data="activebydivision"></canvas>
+                    <div class="clearfix"></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- /Active Projects By Division -->  
+          </div>
+    
+         <div class="row">
+
+            <!-- /Active Projects By Product Line -->
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="x_panel tile">
+                <div class="x_title">
+                  <h2>Active Projects by Product Line</h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <div class="widget_summary">
+                    <canvas tc-chartjs-bar chart-options="options" height="300" chart-data="activebyproductline"></canvas>
+                    <div class="clearfix"></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- /Active Projects By Product Line -->  
+          </div>
+          
+          <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12 x_panel tile">
+                  <div class="nav_title site_title"><i class="fa fa-check"></i> <span>Finished Projects</span></div>
+              </div>
+          </div>
+
+        <div class="row">
+            <!-- Finished Projects By Time (Original) -->
+            <div class="col-md-4 col-sm-4 col-xs-4">
+              <div class="x_panel tile">
+                <div class="x_title">
+                  <h2>Finished Projects by Time (Org)</h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <div class="widget_summary piechart">
+                    <canvas tc-chartjs-pie chart-options="pieOptions" chart-data="finishedbyoriginaltime" auto-legend></canvas>    
+                    <div class="clearfix"></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- /Finished Projects By Time (Original) -->
+            
+            <!-- Finished Projects By Time (Extended) -->
+            <div class="col-md-4 col-sm-4 col-xs-4">
+              <div class="x_panel tile">
+                <div class="x_title">
+                  <h2>Finished Projects by Time (Ext)</h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <div class="widget_summary piechart">
+                    <canvas tc-chartjs-pie chart-options="pieOptions" chart-data="finishedbyextendedtime" auto-legend></canvas>
+                    <div class="clearfix"></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- /Finished Projects By Time (Extended)-->
+                 
+        <!-- Finished Projects By Budget -->
+            <div class="col-md-4 col-sm-4 col-xs-4">
+              <div class="x_panel tile">
+                <div class="x_title">
+                  <h2>Finished Projects by Budget</h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <div class="widget_summary piechart">
+                    <canvas tc-chartjs-pie chart-options="pieOptions" chart-data="finishedbybudget" auto-legend></canvas>
+                    <div class="clearfix"></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- /Finished Projects By Buget-->
+          </div>          
+          
+        <div class="row">
+
+            <!-- Finished Projects By Scope -->
+            <div class="col-md-6 col-sm-6 col-xs-6">
+              <div class="x_panel tile">
+                <div class="x_title">
+                  <h2>Finished Projects by Scope</h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <div class="widget_summary piechart">
+                    <canvas tc-chartjs-pie chart-options="pieOptions" chart-data="finishedbyscope" auto-legend></canvas>    
+                    <div class="clearfix"></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- /Finished Projects By Scope -->
+            
+            <!-- Finished Projects By Quality -->
+            <div class="col-md-6 col-sm-6 col-xs-6">
+              <div class="x_panel tile">
+                <div class="x_title">
+                  <h2>Finished Projects by Quality</h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <div class="widget_summary piechart">
+                    <canvas tc-chartjs-pie chart-options="pieOptions" chart-data="finishedbyquality" auto-legend></canvas>
+                    <div class="clearfix"></div>
+                  
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- /Finished Projects By Quality -->
+          </div>
+          
+        <div class="row">
+
+            <!-- Finished Projects Summary -->
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="x_panel tile">
+                <div class="x_title">
+                  <h2>Summary</h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <div class="widget_summary">
+                    <div class="smart-table">
+                        <table st-safe-src="rowCollection" st-table="displayCollection" class="table table-striped" >
+                            <thead>
+                                <tr>    
+                                    <th>
+                                        Id
+                                        <select st-search placeholder="global search" st-input-event="change" st-delay=0 ng-model="dummy" class="form-control input-sm" type="search">
+                                            <option value="">
+                                                ALL
+                                            </option>
+                                            <option ng-repeat="item in rowCollection" value="{{ item.id }}">
+                                                {{ item.id }}
+                                            </option>
+                                        </select>
+                                    </th>
+                                    <th>
+                                        Project
+                                        <select st-search placeholder="global search" st-input-event="change" st-delay=0 ng-model="dummy" class="form-control input-sm" type="search">
+                                            <option value="">
+                                                ALL
+                                            </option>
+                                            <option ng-repeat="item in rowCollection" value="{{ item.project }}">
+                                                {{ item.project }}
+                                            </option>
+                                        </select>
+                                    </th>
+                                    <th>
+                                        Leader
+                                        <select st-search placeholder="global search" st-input-event="change" st-delay=0 ng-model="dummy" class="form-control input-sm" type="search">
+                                            <option value="">
+                                                ALL
+                                            </option>
+                                            <option ng-repeat="item in rowCollection" value="{{ item.leader }}">
+                                                {{ item.leader }}
+                                            </option>
+                                        </select>
+                                    </th>
+                                    <th>
+                                        Area
+                                        <select st-search="area" st-input-event="change" st-delay=0 ng-model="dummy" class="form-control input-sm" type="search">
+                                            <option value="">
+                                                ALL
+                                            </option>
+                                            <option ng-repeat="item in rowCollection" value="{{ item.area }}">
+                                                {{ item.area }}
+                                            </option>
+                                        </select>
+                                    </th>
+                                    <th>
+                                        Scope
+                                    </th>
+                                    <th>
+                                        OT
+                                    </th>
+                                    <th>
+                                        ET
+                                    </th>
+                                    <th>
+                                        Budget
+                                    </th>
+                                    <th>
+                                        Quality
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="row in displayCollection">
+                                    <td>{{row.id}}</td>
+                                    <td>{{row.project}}</td>
+                                    <td>{{row.leader}}</td>
+                                    <td>{{row.area}}</td>
+                                    <td style="background-color: {{row.dimensions.scope}};border: 1px solid gray;"></td>
+                                    <td style="background-color: {{row.dimensions.originaltime}};border: 1px solid gray;"></td>
+                                    <td style="background-color: {{row.dimensions.extendedtime}};border: 1px solid gray;"></td>
+                                    <td style="background-color: {{row.dimensions.budget}};border: 1px solid gray;"></td>
+                                    <td style="background-color: {{row.dimensions.quality}};border: 1px solid gray;"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="clearfix"></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- /Finished Projects By Summary -->  
+          </div>
+
+        <!-- SCRIPTS -->
+        <script src="js/lib/jquery.min.js"></script>
+        <script src="js/lib/underscore-min.js"></script>
+        <script src="js/lib/angular.js"></script>
+        <script src="js/lib/Chart.min.js"></script>
+        <script src="js/lib/tc-angular-chartjs.min.js"></script>        
+        <script src="js/lib/angular-route.min.js"></script>
+        <script src="js/lib/angular-animate.min.js"></script>
+        <script src="js/lib/smart-table.min.js"></script>       
+        <script src="js/lib/bootstrap.min.js"></script>       
+        <script src="js/lib/Chart.StackedBar.js"></script>
+        <script src="js/lib/ion.rangeSlider.js"></script>
+        <script src="js/app.js"></script>
+        <script src="js/services/ProjectServerService.js"></script>
+        <script src="js/controllers/ProjectsCtrl.js"></script>
+        <!-- END SCRIPTS -->
+    </body>
+</html>
